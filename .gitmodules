@@ -1,0 +1,6 @@
+[submodule "rpg-cards-py-obsidian-md-to-yaml"]
+	path = rpg-cards-py-obsidian-md-to-yaml
+	url = https://github.com/DrakeRichards/rpg-cards-py-obsidian-md-to-yaml
+[submodule "rpg-cards-typst-templates"]
+	path = rpg-cards-typst-templates
+	url = https://github.com/DrakeRichards/rpg-cards-typst-templates
