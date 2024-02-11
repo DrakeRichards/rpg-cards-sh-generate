@@ -1,5 +1,4 @@
 venv/
 in/images/*
 in/markdown/*
-out/pdf/*
-out/yaml/*
+out/*
