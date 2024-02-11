@@ -3,24 +3,40 @@
 # Generate a character card for a given character.
 # Usage: ./generate-character-card.sh <character-name>
 
+# Colors
+Cyan='\033[0;36m'
+Yellow='\033[0;33m'
+Green='\033[0;32m'
+Red='\033[0;31m'
+Reset='\033[0m'
+
 # Check if the character name is provided.
 if [ -z "$1" ]; then
-  echo "Please provide a character name."
+  echo "${Yellow}Please provide a character name.${Reset}"
   exit 1
 fi
 
 # Check if the character exists.
 if [ ! -f "in/markdown/$1.md" ]; then
-  echo "Character not found."
+  echo "${Yellow}Character not found.${Reset}"
   exit 1
 fi
 
+# Change color to cyan
+echo "${Cyan}Generating character card for '$1'...${Reset}"
+
+# Activate the venv
+. venv/bin/activate
+
 # Pass the character's markdown file to the python script to convert it to yaml.
+# Only errors will be printed from this, so color them red.
+printf "%b" "${Red}"
 python3 rpg-cards-py-obsidian-md-to-yaml/convert_character.py "in/markdown/$1.md" "in"
+printf "%b" "${Reset}"
 
 # Check if the character's yaml file exists.
 if [ ! -f "in/$1.yaml" ]; then
-  echo "Character not found."
+  echo "${Yellow}Character YAML not generated. Operation aborted.${Reset}"
   exit 1
 fi
 
@@ -39,3 +55,12 @@ typst compile rpg-cards-typst-templates/src/cards/character/landscape.typ "out/$
 # Clean up the Typst input location.
 rm "rpg-cards-typst-templates/in/character.yaml"
 rm "rpg-cards-typst-templates/in/$image"
+
+# Check if the character card was generated.
+if [ ! -f "out/$1.pdf" ]; then
+  echo "${Yellow}Character card failed to generate.${Reset}"
+  exit 1
+fi
+
+echo "${Green}Character card for '$1' generated successfully.${Reset}"
+echo
