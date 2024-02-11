@@ -91,9 +91,6 @@ generateCharacter() {
   # Change color to cyan
   echo "${Cyan}Generating character card for '$1'...${Reset}"
 
-  # Activate the venv
-  . venv/bin/activate
-
   # Pass the character's markdown file to the python script to convert it to yaml.
   # Only errors will be printed from this, so color them red.
   printf "%b" "${Yellow}"
@@ -123,10 +120,12 @@ generateCharacter() {
 
   # Run the character card generation script.
   {
-    typst compile $typstDirectory/src/cards/character/landscape.typ "out/$1.pdf" --root $typstDirectory
+    # Suppress errors from the Typst command, as they are not helpful.
+    typst compile $typstDirectory/src/cards/character/landscape.typ "out/$1.pdf" --root $typstDirectory 2>/dev/null
   } || {
     # If the previous compile failed, it might be because the image has the wrong file extension. Try converting between png/jpg and try again.
     {
+      echo "${Yellow}Character card failed to generate. Attempting to convert image file extension...${Reset}"
       switchPngAndJpgExtension "$typstDirectory/in/$image"
       # The "image" text in the YAML file needs to be updated to reflect the new file extension.
       updateYamlImageExtension "$typstDirectory/in/character.yaml" "$(echo "$image" | sed 's/.png/.jpg/')"
@@ -160,6 +159,9 @@ generateCharacter() {
   echo "${Green}Character card for '$1' generated successfully.${Reset}"
   echo
 }
+
+# Activate the venv
+. venv/bin/activate
 
 # Check if the -d flag is passed.
 if [ "$1" = "-d" ]; then
