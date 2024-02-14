@@ -2,3 +2,4 @@ venv/
 in/images/*
 in/markdown/*
 out/*
+!**/placeholder
