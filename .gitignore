@@ -3,4 +3,4 @@ in/images/*
 in/markdown/*
 in/*.yaml
 out/*
-!**/placeholder
+!**/.placeholder
